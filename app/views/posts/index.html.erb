@@ -1,14 +1,53 @@
-<%= form_with method: :get, local: true do %>
-    <%= label_tag :username, "Filter by username" %>
-    <%= text_field_tag :username, params[:username] %>
-    <%= submit_tag "Search" %>
-  <% end %>
-  
-  <% @posts.each do |post| %>
-    <div>
-      <h3><%= post.user.username %></h3>
-      <p><%= post.content %></p>
-      <p>Comments: <%= link_to post.comment_count, post_path(post) %></p>
-      <p>Last updated: <%= post.updated_at.strftime("%B %d, %Y %H:%M") %></p>
+<div class="max-w-3xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-semibold text-gray-800">Posts</h1>
+    <%= link_to "New Post", new_post_path, 
+        class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+  </div>
+
+  <%= form_tag root_path, method: :get, class: "mb-8" do %>
+    <div class="flex gap-2">
+      <%= text_field_tag :username, params[:username], 
+          placeholder: "Search by username", 
+          class: "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      <%= submit_tag "Search", 
+          class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
     </div>
   <% end %>
+
+  <div class="space-y-6">
+    <% @posts.each do |post| %>
+      <div class="bg-white rounded-lg border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-shadow duration-300 p-6 flex flex-col">
+        <div class="text-center mb-3">
+          <h2 class="text-lg font-medium text-gray-800"><%= post.user.username %></h2>
+          <p class="text-sm text-gray-500">
+            <%= time_ago_in_words(post.updated_at) %> ago
+          </p>
+        </div>
+
+        <div class="text-center mb-6">
+          <p class="text-gray-600 px-4"><%= post.content %></p>
+        </div>
+        
+        <div class="mt-auto pt-4 border-t border-gray-100">
+          <div class="flex items-center justify-center space-x-6">
+            <%= link_to post_path(post), class: "text-sm text-gray-500 hover:text-blue-500 transition-colors" do %>
+              <%= pluralize(post.comments.count, 'comment') %>
+            <% end %>
+
+            <% if post.user == current_user %>
+              <div class="flex items-center space-x-4">
+                <%= link_to "Edit", edit_post_path(post), 
+                    class: "text-sm text-gray-500 hover:text-blue-500 transition-colors" %>
+                <%= button_to "Delete", post_path(post), 
+                    method: :delete, 
+                    class: "text-sm text-gray-500 hover:text-red-500 transition-colors", 
+                    data: { confirm: "Are you sure?" } %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

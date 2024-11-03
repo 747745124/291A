@@ -1,0 +1,11 @@
+<%= turbo_frame_tag dom_id(comment) do %>
+  <div class="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
+    <div class="mb-2">
+      <span class="font-medium text-gray-800"><%= comment.user.username %></span>
+      <span class="text-sm text-gray-500 ml-2">
+        <%= time_ago_in_words(comment.created_at) %> ago
+      </span>
+    </div>
+    <p class="text-gray-600"><%= comment.content %></p>
+  </div>
+<% end %>

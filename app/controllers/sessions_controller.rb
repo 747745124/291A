@@ -1,23 +1,17 @@
 class SessionsController < ApplicationController
-    # skip_before_action :require_login, only: [:create]
+  skip_before_action :require_login, only: [ :new, :create ]
 
-    def create
-        @user = User.find_by(username: params[:username])
-        if !!@user
-            session[:user_id] = @user.id
-            params[:id] = @user.id
-            redirect_to root_path
-        else
-            @user = User.new(username: params[:username])
-            session[:user_id] = @user.id
-            params[:id] = @user.id
-            redirect_to root_path
-        end
-    end
+  def new
+  end
 
-    def destroy
-        session.delete :user_id
-        head :no_content
-    end
+  def create
+    user = User.find_or_create_by(username: params[:username])
+    session[:user_id] = user.id
+    redirect_to root_path
+  end
 
+  def destroy
+    session[:user_id] = nil
+    redirect_to login_path
+  end
 end

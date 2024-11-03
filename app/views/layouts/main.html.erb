@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Social Posts" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md w-full">
+      <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <span class="text-gray-700">
+              Welcome, <span class="font-medium"><%= current_user.username %></span>
+            </span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <%= link_to root_path, class: "text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium" do %>
+              Home
+            <% end %>
+            <%= link_to logout_path, class: "text-gray-600 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" do %>
+              Logout
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <% if notice %>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-6" role="alert">
+          <p class="text-sm"><%= notice %></p>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6" role="alert">
+          <p class="text-sm"><%= alert %></p>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

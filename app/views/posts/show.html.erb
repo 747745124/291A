@@ -1,0 +1,80 @@
+<div class="max-w-3xl mx-auto">
+  <%= link_to root_path, 
+      class: "inline-flex items-center text-gray-500 hover:text-blue-500 mb-8 text-sm transition-colors" do %>
+    ← Back to Posts
+  <% end %>
+
+  <div class="bg-white rounded-lg shadow p-6 flex flex-col mb-8">
+    <div class="text-center mb-4">
+      <h2 class="text-xl font-medium text-gray-800 mb-1"><%= @post.user.username %></h2>
+      <p class="text-sm text-gray-500">
+        <%= time_ago_in_words(@post.updated_at) %> ago
+      </p>
+    </div>
+
+    <div class="text-center mb-6">
+      <p class="text-gray-600"><%= @post.content %></p>
+    </div>
+
+    <% if @post.user == current_user %>
+      <div class="mt-auto">
+        <div class="border-t pt-4">
+          <div class="flex items-center justify-center space-x-6">
+            <%= link_to "Edit", edit_post_path(@post), 
+                class: "text-sm text-gray-500 hover:text-blue-500 transition-colors" %>
+            <%= button_to "Delete", post_path(@post), 
+                method: :delete, 
+                class: "text-sm text-gray-500 hover:text-red-500 transition-colors", 
+                data: { confirm: "Are you sure?" } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+
+  <div id="comment_form" class="bg-white rounded-lg shadow p-6 mb-8">
+    <h3 class="text-lg font-medium text-gray-800 text-center mb-4">Add a Comment</h3>
+    <%= form_for [@post, @comment] do |f| %>
+        <% if flash.now[:alert] %>
+        <div class="alert alert-danger"><%= flash.now[:alert] %></div>
+        <% end %>
+      <div class="mb-4">
+        <%= f.text_area :content, 
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+            rows: 3,
+            placeholder: "Write your comment..." %>
+        <p class="mt-1 text-sm text-gray-500 text-center">Maximum 1000 characters</p>
+      </div>
+
+      <div class="text-center">
+        <%= f.submit "Add Comment", 
+            class: "bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-medium text-gray-800 text-center mb-6">
+      Comments (<%= @post.comments.count %>)
+    </h3>
+    
+    <div id="comments" class="space-y-6">
+      <% if @post.comments.any? %>
+        <% @post.comments.includes(:user).order(created_at: :desc).each do |comment| %>
+          <div class="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
+            <div class="text-center mb-2">
+              <span class="font-medium text-gray-800"><%= comment.user.username %></span>
+              <span class="text-sm text-gray-500 ml-2">
+                <%= time_ago_in_words(comment.created_at) %> ago
+              </span>
+            </div>
+            <p class="text-gray-600 text-center"><%= comment.content %></p>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500 text-sm text-center">No comments yet. Be the first to comment!</p>
+      <% end %>
+    </div>
+  </div>
+</div>

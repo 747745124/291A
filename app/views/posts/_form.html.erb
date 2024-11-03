@@ -1,0 +1,37 @@
+<div class="max-w-3xl mx-auto">
+  <%= link_to root_path, 
+      class: "inline-flex items-center text-gray-500 hover:text-blue-500 mb-8 text-sm transition-colors" do %>
+    ← Back to Posts
+  <% end %>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+      <%= post.new_record? ? "Create New Post" : "Edit Post" %>
+    </h2>
+
+    <%= form_with(model: post, local: true) do |f| %>
+      <% if post.errors.any? %>
+        <div class="bg-red-50 text-red-500 p-4 rounded-md mb-6 text-sm">
+          <% post.errors.full_messages.each do |msg| %>
+            <p><%= msg %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="mb-6">
+        <%= f.label :content, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_area :content, 
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+            rows: 6,
+            placeholder: "What's on your mind?" %>
+      </div>
+
+      <div class="flex items-center justify-end space-x-4">
+        <%= link_to "Cancel", root_path, 
+            class: "text-gray-500 hover:text-gray-700 px-4 py-2 text-sm font-medium transition-colors" %>
+        <%= f.submit post.new_record? ? "Create Post" : "Update Post", 
+            class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>

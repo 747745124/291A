@@ -1,15 +1,16 @@
 class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
-
   validates :content, presence: true
-  validates :user, presence: true
 
-  def comment_count
-    comments.count
-  end
+  validate :no_election_influence
 
-  def self.filter_by_username(username)
-    where(users: { username: username })
+  private
+
+  def no_election_influence
+    forbidden_words = [ "trump", "harris" ]
+    if forbidden_words.any? { |word| content.downcase.include?(word) }
+      errors.add(:content, "cannot contain election-related content")
+    end
   end
 end
