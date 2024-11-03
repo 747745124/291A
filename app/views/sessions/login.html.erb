@@ -1,0 +1,12 @@
+<h1>Login</h1>
+
+<%= form_with(url: '/login', method: :post) do %>
+    <div class="field">
+        <%= label_tag :username, "Username" %>
+        <%= text_field_tag :username %>
+    </div>
+
+    <div class="actions">
+        <%= submit_tag "Login" %>
+    </div>
+<% end %>
